@@ -105,7 +105,7 @@
                 <div class="mb-3 card card-body ">
                     <div class="mb-3 form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="home_status" name="home_status"
-                               @if(setting('tebex.shop.home', true)) checked @endif>
+                               @if(setting('tebex.shop.home_status', true)) checked @endif>
                         <label class="form-check-label"
                                for="home_status">{{ trans('tebex::messages.home.toggle') }}</label>
                     </div>

@@ -32,6 +32,12 @@ class TebexHomeController extends Controller
         list($rProducts, $rCategories, $rSales) = $this->categoryService->getCategoriesData($token, true);
         $categories = $this->categoryService->processCategories($rProducts, $rCategories, $rSales);
 
+        if (! setting('tebex.shop.home_status', true) && ! empty($categories)) {
+            request()->session()->reflash();
+
+            return to_route('tebex.categories.show', $categories[0]->id);
+        }
+
         $this->markPackagesInCart($categories);
 
         return view('tebex::index', ["categories" => $categories]);

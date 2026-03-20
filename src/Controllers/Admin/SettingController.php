@@ -59,7 +59,7 @@ class SettingController extends Controller
             'tebex.private_key' => $encryptedPrivateKey,
             'tebex.shop.title' => $request->input('tebex_title'),
             'tebex.shop.subtitle' => $request->input('tebex_subtitle'),
-            'tebex.shop.home' => $request->has("home_status"),
+            'tebex.shop.home_status' => $request->input('home_status'),
             'tebex.shop.home.message' => $request->input('home_message'),
         ]);
 

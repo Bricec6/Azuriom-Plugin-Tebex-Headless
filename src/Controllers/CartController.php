@@ -149,7 +149,7 @@ class CartController extends Controller
     {
         $cart->clear();
 
-        session()->forget(['tebex.basket.ident', 'tebex.username', 'tebex.creator_code']);
+        session()->forget(['tebex.basket.ident', 'tebex.creator_code']);
 
         return redirect()->route('tebex.cart.show')->with('success', trans('tebex::messages.cart.cleared'));
     }
@@ -157,7 +157,7 @@ class CartController extends Controller
     public function paymentComplete(CartSessionService $cart)
     {
         $cart->clear();
-        session()->forget(['tebex.basket.ident', 'tebex.username', 'tebex.creator_code']);
+        session()->forget(['tebex.basket.ident', 'tebex.creator_code']);
         return redirect()->route('tebex.cart.show')->with('success', trans('tebex::messages.payment.success'));
     }
 

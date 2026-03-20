@@ -1,5 +1,5 @@
 <div class="list-group mb-4">
-    @if(setting('tebex.shop.home', true))
+    @if(setting('tebex.shop.home_status', true))
         <a href="{{ route('tebex.index') }}" class="list-group-item @if(!isset($category)) active @endif">
             {{ trans('tebex::messages.home.home') }}
         </a>

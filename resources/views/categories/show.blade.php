@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="row">
-    <h1>{{ $category->name }}</h1>
+    <h1 class="mb-3">{{ $category->name }}</h1>
 
     <div class="col-lg-3">
         @include('tebex::categories._sidebar')
