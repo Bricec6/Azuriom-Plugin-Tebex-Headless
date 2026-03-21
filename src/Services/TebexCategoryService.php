@@ -14,6 +14,14 @@ class TebexCategoryService
     public function getCategoriesData($token, $includePackages = true)
     {
         $categoriesData = $this->tebexApi->getCategories($token, $includePackages);
+        $pricingData = $this->tebexApi->getPackagesWithPricing($token);
+
+        $pricingMap = [];
+        if ($pricingData && isset($pricingData['data'])) {
+            foreach ($pricingData['data'] as $p) {
+                $pricingMap[$p['id']] = $p;
+            }
+        }
 
         $allPackages = [];
         $transformedCategories = [];
@@ -29,7 +37,7 @@ class TebexCategoryService
 
                 if (isset($category['packages']) && is_array($category['packages'])) {
                     foreach ($category['packages'] as $pkg) {
-                        $pObj = $this->mapPackageToObject($pkg, $category['id']);
+                        $pObj = $this->mapPackageToObject($pkg, $category['id'], $pricingMap);
                         $allPackages[] = $pObj;
                         $catObj->packages[] = (object)['id' => $pkg['id']];
                     }
@@ -45,7 +53,7 @@ class TebexCategoryService
 
                         if (isset($subcat['packages']) && is_array($subcat['packages'])) {
                             foreach ($subcat['packages'] as $pkg) {
-                                $pObj = $this->mapPackageToObject($pkg, $subcat['id']);
+                                $pObj = $this->mapPackageToObject($pkg, $subcat['id'], $pricingMap);
                                 $allPackages[] = $pObj;
                                 $subObj->packages[] = (object)['id' => $pkg['id']];
                             }
@@ -60,13 +68,19 @@ class TebexCategoryService
         return [$allPackages, (object) ['categories' => $transformedCategories], (object) ['data' => []]];
     }
 
-    private function mapPackageToObject($pkg, $catId)
+    private function mapPackageToObject($pkg, $catId, $pricingMap = [])
     {
+        $priceData = $pricingMap[$pkg['id']] ?? ['_debug_source' => 'categories_endpoint', '_debug_data' => $pkg];
+
         return (object) [
             'id' => $pkg['id'],
             'name' => $pkg['name'],
             'description' => $pkg['description'] ?? '',
-            'price' => $pkg['base_price'] ?? ($pkg['price'] ?? 0),
+            'price' => $priceData['price'] ?? ($pkg['price'] ?? 0),
+            'base_price' => $priceData['base_price'] ?? null,
+            'total_price' => $priceData['total_price'] ?? null,
+            'discount' => $priceData['discount'] ?? 0,
+            'sales_tax' => $priceData['sales_tax'] ?? 0,
             'image' => $pkg['image'] ?? '',
             'disabled' => false,
             'category' => (object) ['id' => $catId]
@@ -129,7 +143,20 @@ class TebexCategoryService
 
     public function formatProduct($Product, $rSales)
     {
-        $price = $Product->price;
+        $showVat = setting('tebex.shop.vat.status', false);
+
+        $currentBase = $Product->base_price ?? $Product->price;
+        $currentTotal = $Product->total_price ?? $currentBase;
+
+        $discountBase = $Product->discount ?? 0;
+
+        $taxMultiplier = 1;
+        if ($currentBase > 0) {
+            $taxMultiplier = $currentTotal / $currentBase;
+        }
+
+        $currentPrice = $showVat ? $currentTotal : $currentBase;
+        $originalPrice = $currentPrice + ($discountBase * ($showVat ? $taxMultiplier : 1));
 
         $product = (object) [
             'id' => $Product->id,
@@ -137,8 +164,8 @@ class TebexCategoryService
             'image' => $Product->image,
             'description' => $Product->description,
             "price" => (object) [
-                "normal" => round($price, 2),
-                "discounted" => null,
+                "normal" => round($originalPrice, 2),
+                "discounted" => ($discountBase > 0) ? round($currentPrice, 2) : null,
                 "expire" => null,
             ],
             "sales" => []
