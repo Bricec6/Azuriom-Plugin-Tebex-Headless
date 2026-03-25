@@ -12,12 +12,13 @@
     @endphp
 
     @include('tebex::components.admin.partials.intro', ['ressourceName' => 'tebex', 'ressourceType' => 'plugin'])
+    <form id="tebex-settings-form" action="{{ route('tebex.admin.index') }}" method="POST">
+        @csrf
 
     <div class="card shadow mb-4">
         <div class="card-body">
 
-            <form id="tebex-settings-form" action="{{ route('tebex.admin.index') }}" method="POST">
-                @csrf
+
 
                 <div class="mb-3">
                     <label class="form-label" for="public_key">{{ trans('tebex::admin.fields.public_key') }}</label>
@@ -120,65 +121,66 @@
                     @enderror
                 </div>
 
-                <div class="card shadow mb-4" v-scope="{ banners: {{ json_encode($banners) }} }">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-tag"></i> {{ trans('tebex::admin.banners.title') }}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="text-muted small">{{ trans('tebex::admin.banners.info') }}</p>
-                        
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>{{ trans('tebex::admin.fields.package') }}</th>
-                                        <th>{{ trans('tebex::admin.fields.banner_text') }}</th>
-                                        <th>{{ trans('tebex::admin.fields.banner_color') }}</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(banner, index) in banners" :key="index">
-                                        <td>
-                                            <select class="form-select" :name="'banners[' + index + '][package_id]'" v-model="banner.package_id" required>
-                                                <option value="">{{ trans('tebex::admin.fields.select_package') }}</option>
-                                                @foreach($packages as $package)
-                                                    <option value="{{ $package->id }}">{{ $package->name }} (ID: {{ $package->id }})</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" :name="'banners[' + index + '][text]'" v-model="banner.text" placeholder="Ex: Offre Spéciale" required>
-                                        </td>
-                                        <td>
-                                            <input type="color" class="form-control form-control-color" :name="'banners[' + index + '][color]'" v-model="banner.color" required>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-outline-danger btn-sm" @click="banners.splice(index, 1)">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <button type="button" class="btn btn-outline-success btn-sm mt-2" @click="banners.push({package_id: '', text: '', color: '#007bff'})">
-                            <i class="bi bi-plus-lg"></i> {{ trans('tebex::admin.banners.add') }}
-                        </button>
-                    </div>
-                </div>
-
-
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-save"></i> {{ trans('messages.actions.save') }}
-                </button>
-            </form>
-
         </div>
     </div>
+
+    <div class="card shadow mb-4" v-scope="{ banners: {{ json_encode($banners) }} }">
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="bi bi-tag"></i> {{ trans('tebex::admin.banners.title') }}
+            </h5>
+            <p class="card-subtitle">{{ trans('tebex::admin.banners.info') }}</p>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ trans('tebex::admin.fields.package') }}</th>
+                        <th>{{ trans('tebex::admin.fields.banner_text') }}</th>
+                        <th>{{ trans('tebex::admin.fields.banner_color') }}</th>
+                        <th>{{ trans('messages.fields.action') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(banner, index) in banners" :key="index">
+                        <td>
+                            <select class="form-select" :name="'banners[' + index + '][package_id]'" v-model="banner.package_id" required>
+                                <option value="">{{ trans('tebex::admin.fields.select_package') }}</option>
+                                @foreach($packages as $package)
+                                    <option value="{{ $package->id }}">{{ $package->name }} (ID: {{ $package->id }})</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" :name="'banners[' + index + '][text]'" v-model="banner.text" required>
+                        </td>
+                        <td>
+                            <input type="color" class="form-control form-control-color" :name="'banners[' + index + '][color]'" v-model="banner.color" required>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-danger btn-sm" @click="banners.splice(index, 1)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button type="button" class="btn btn-outline-success btn-sm mt-2" @click="banners.push({package_id: '', text: '', color: '#007bff'})">
+                <i class="bi bi-plus-lg"></i> {{ trans('tebex::admin.banners.add') }}
+            </button>
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-save"></i> {{ trans('messages.actions.save') }}
+    </button>
+
+    </form>
+
 @endsection
 
 @push('scripts')

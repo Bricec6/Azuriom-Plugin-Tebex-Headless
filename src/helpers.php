@@ -53,6 +53,41 @@ if (! function_exists('tebex_currency_symbol')) {
     }
 }
 
+if (! function_exists('tebex_format_price_data')) {
+    /**
+     * Build normalized price info (normal, discounted, display) from pricing data.
+     *
+     * @param array $priceData
+     * @param bool|null $showVat
+     * @return array{normal: float, discounted: ?float, display: float}
+     */
+    function tebex_format_price_data(array $priceData, ?bool $showVat = null): array
+    {
+        $showVat = $showVat ?? setting('tebex.shop.vat.status', false);
+
+        $currentBase = (float) ($priceData['base_price'] ?? $priceData['price'] ?? 0);
+        $currentTotal = (float) ($priceData['total_price'] ?? $currentBase);
+        $discountBase = (float) ($priceData['discount'] ?? 0);
+
+        $taxMultiplier = 1.0;
+        if ($currentBase > 0) {
+            $taxMultiplier = $currentTotal / $currentBase;
+        }
+
+        $currentPrice = $showVat ? $currentTotal : $currentBase;
+        $originalPrice = $currentPrice + ($discountBase * ($showVat ? $taxMultiplier : 1));
+
+        $normal = round($originalPrice, 2);
+        $discounted = $discountBase > 0 ? round($currentPrice, 2) : null;
+
+        return [
+            'normal' => $normal,
+            'discounted' => $discounted,
+            'display' => $discounted ?? $normal,
+        ];
+    }
+}
+
 
 if (!function_exists('tebex_get_cart')) {
     /**

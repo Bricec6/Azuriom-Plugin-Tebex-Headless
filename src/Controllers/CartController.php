@@ -26,7 +26,10 @@ class CartController extends Controller
 
         foreach ($snapshot['items'] as &$item) {
             if ($pkg = $packagesMap->get($item['package_id'])) {
-                $item['price'] = (float) ($pkg['total_price'] ?? $pkg['base_price'] ?? $pkg['price'] ?? 0);
+                $priceInfo = tebex_format_price_data($pkg);
+                $item['price'] = $priceInfo['display'];
+                $item['price_normal'] = $priceInfo['normal'];
+                $item['price_discounted'] = $priceInfo['discounted'];
                 $item['name'] = $pkg['name'] ?? $item['name'];
                 $item['image'] = $pkg['image'] ?? null;
             } else {

@@ -83,7 +83,7 @@
         const priceDisplay = document.getElementById('modal-pkg-price-display');
 
         if (pkg.price.discounted) {
-            priceDisplay.innerHTML = `<del class="small text-muted me-2">${pkg.price.normal}${tebexConfig.currency}</del> ${pkg.price.discounted}${tebexConfig.currency}`;
+            priceDisplay.innerHTML = `<del class="small text-danger me-2">${pkg.price.normal}${tebexConfig.currency}</del> ${pkg.price.discounted}${tebexConfig.currency}`;
         } else {
             priceDisplay.innerText = `${pkg.price.normal}${tebexConfig.currency}`;
         }

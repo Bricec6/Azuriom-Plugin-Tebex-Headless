@@ -42,12 +42,10 @@ class SettingController extends Controller
 
         $packages = [];
         $token = setting('tebex.key');
+
         if ($token) {
-            try {
-                list($rProducts, $rCategories, $rSales) = $this->categoryService->getCategoriesData($token, true);
-                $packages = $rProducts;
-            } catch (\Exception $e) {
-            }
+            list($rProducts) = $this->categoryService->getCategoriesData($token, true);
+            $packages = $rProducts;
         }
 
         return view('tebex::admin.index', [

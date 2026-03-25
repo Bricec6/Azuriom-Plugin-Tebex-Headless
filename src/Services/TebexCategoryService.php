@@ -144,19 +144,12 @@ class TebexCategoryService
     public function formatProduct($Product, $rSales)
     {
         $showVat = setting('tebex.shop.vat.status', false);
-
-        $currentBase = $Product->base_price ?? $Product->price;
-        $currentTotal = $Product->total_price ?? $currentBase;
-
-        $discountBase = $Product->discount ?? 0;
-
-        $taxMultiplier = 1;
-        if ($currentBase > 0) {
-            $taxMultiplier = $currentTotal / $currentBase;
-        }
-
-        $currentPrice = $showVat ? $currentTotal : $currentBase;
-        $originalPrice = $currentPrice + ($discountBase * ($showVat ? $taxMultiplier : 1));
+        $priceInfo = tebex_format_price_data([
+            'base_price' => $Product->base_price ?? null,
+            'total_price' => $Product->total_price ?? null,
+            'price' => $Product->price ?? 0,
+            'discount' => $Product->discount ?? 0,
+        ], $showVat);
 
         $product = (object) [
             'id' => $Product->id,
@@ -164,8 +157,8 @@ class TebexCategoryService
             'image' => $Product->image,
             'description' => $Product->description,
             "price" => (object) [
-                "normal" => round($originalPrice, 2),
-                "discounted" => ($discountBase > 0) ? round($currentPrice, 2) : null,
+                "normal" => $priceInfo['normal'],
+                "discounted" => $priceInfo['discounted'],
                 "expire" => null,
             ],
             "sales" => [],

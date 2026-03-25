@@ -51,14 +51,19 @@
                                 </th>
                                 <td>
                                     @if(isset($item['price']))
-                                        {{ number_format($item['price'], 2) }}{{ tebex_currency_symbol() }}
+                                        @if(isset($item['price_discounted']) && $item['price_discounted'] !== null)
+                                            <del class="small text-danger">{{ tebex_format_price($item['price_normal']) }}</del>
+                                            {{ tebex_format_price($item['price_discounted']) }}
+                                        @else
+                                            {{ tebex_format_price($item['price']) }}
+                                        @endif
                                     @else
                                         <span class="text-muted">N/A</span>
                                     @endif
                                 </td>
                                 <td class="row-total fw-bold">
                                     @if(isset($item['price']))
-                                        {{ number_format($lineTotal, 2) }}{{ tebex_currency_symbol() }}
+                                        {{ tebex_format_price($lineTotal) }}
                                     @else
                                         <span class="text-muted">N/A</span>
                                     @endif
@@ -96,7 +101,7 @@
                 </div>
 
                 <h5 class="text-end">
-                    {{ trans('tebex::messages.cart.total') }} : <span id="cart-grand-total">{{ number_format($globalTotal, 2) }}{{ tebex_currency_symbol() }}</span>
+                    {{ trans('tebex::messages.cart.total') }} : <span id="cart-grand-total">{{ tebex_format_price($globalTotal) }}</span>
                 </h5>
             @else
                 <div class="alert alert-warning" role="alert">
