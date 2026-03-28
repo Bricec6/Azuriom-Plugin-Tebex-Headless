@@ -7,6 +7,12 @@ return [
 
     'shop' => 'Boutique',
 
+    'fields' => [
+        'price' => 'Prix',
+        'quantity' => 'Quantité',
+        'total' => 'Total',
+    ],
+
     'categories' => [
         'empty' => 'Cette catégorie est vide.',
     ],

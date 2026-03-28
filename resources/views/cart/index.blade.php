@@ -26,9 +26,9 @@
                         <thead class="table-dark">
                         <tr>
                             <th scope="col">{{ trans('messages.fields.name') }}</th>
-                            <th scope="col">{{ trans('shop::messages.fields.price') }}</th>
-                            <th scope="col">{{ trans('shop::messages.fields.total') }}</th>
-                            <th scope="col" style="width: 150px;">{{ trans('shop::messages.fields.quantity') }}</th>
+                            <th scope="col">{{ trans('tebex::messages.fields.price') }}</th>
+                            <th scope="col">{{ trans('tebex::messages.fields.total') }}</th>
+                            <th scope="col" style="width: 150px;">{{ trans('tebex::messages.fields.quantity') }}</th>
                             <th scope="col">{{ trans('messages.fields.action') }}</th>
                         </tr>
                         </thead>
@@ -74,7 +74,7 @@
                                            max="99"
                                            class="form-control item-quantity-input text-center"
                                            value="{{ $item['quantity'] }}"
-                                           aria-label="{{ trans('shop::messages.fields.quantity') }}">
+                                           aria-label="{{ trans('tebex::messages.fields.quantity') }}">
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-danger remove-item">

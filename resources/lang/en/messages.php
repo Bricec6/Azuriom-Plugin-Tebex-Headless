@@ -7,6 +7,12 @@ return [
 
     'shop' => 'Shop',
 
+    'fields' => [
+        'price' => 'Price',
+        'quantity' => 'Quantity',
+        'total' => 'Total',
+    ],
+
     'categories' => [
         'empty' => 'This category is empty.',
     ],

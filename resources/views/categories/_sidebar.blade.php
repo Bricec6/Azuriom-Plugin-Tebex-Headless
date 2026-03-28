@@ -21,7 +21,7 @@
     @include('tebex::user.profile')
 
     @if(auth()->check() || session('tebex.username'))
-        <a href="{{ route('tebex.cart.show') }}" class="w-100 btn btn-primary d-block">
+        <a href="{{ route('tebex.cart.show') }}" class="w-100 btn btn-primary">
             <i class="bi bi-cart"></i> {{ trans('tebex::messages.cart.cart') }}
             <span id="cart-count-badge" class="badge bg-danger ms-1">{{ tebex_cart_count() }}</span>
         </a>

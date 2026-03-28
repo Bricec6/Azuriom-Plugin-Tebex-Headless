@@ -19,7 +19,7 @@
 
                     <div class="d-flex align-items-center flex-wrap gap-3">
                         <div class="d-flex align-items-center gap-1">
-                            <label for="quantity-modal" class="me-2">{{ trans('shop::messages.fields.quantity') }}</label>
+                            <label for="quantity-modal" class="me-2">{{ trans('tebex::messages.fields.quantity') }}</label>
                             <input type="number"
                                    min="1"
                                    max="99"
